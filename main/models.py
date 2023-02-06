@@ -2,61 +2,83 @@ from django.utils import timezone
 from django.db import models
 
 # Create your models here.
-class Company(models.Model):
-    company_types = (
-        ('S', 'Factory'),
-        ('M', 'Shop'),
-        ('L', 'Deler'),
-        ('P','Person')
-    )
-    municipality_types = (
-        ('ME', 'Metropoliton'),
-        ('SM', 'Sub-Metro'),
-        ('MU', 'Municipality'),
-        ('V','VDC')
-    )
-    company_id= models.CharField(max_length=10)
-    company_name = models.CharField(max_length=200)
-    company_type = models.CharField(max_length=1, choices=company_types,default='S')
-    district = models.CharField(max_length=50,null=True)
+class Client(models.Model):
+  
+    client_name = models.CharField(max_length=200)
+    client_type = models.CharField(max_length=50,null=True) 
     province = models.CharField(max_length=50,null=True)
-    municipality_type = models.CharField(max_length=2,choices=municipality_types,null=True)
+    district = models.CharField(max_length=50,null=True)
     municipality = models.CharField(max_length=50,null=True)
-    ward_no = models.IntegerField(null=True)
-    pan_number = models.CharField(max_length=12,null=True)
-    shop_keeper_name = models.CharField(max_length=50,null=True)
-    shop_keeper_phone = models.CharField(max_length=10,null=True)
+    ward_no = models.TextField(max_length=2,null=True)
+    address = models.TextField(max_length=50,null=True)
+    pan_number = models.CharField(max_length=12,null=True,unique=True)
     manager_name = models.CharField(max_length=50,null=True)
     manager_phone = models.CharField(max_length=10,null=True)
-    company_phone = models.CharField(max_length=10,null=True)
-
+    client_phone = models.CharField(max_length=10,null=True)
+    email = models.CharField(max_length=50,null=True)
     def __str__(self):
-        return self.company_name
+        return self.client_name
 
+
+        
 class Product(models.Model):
-    product_category_types = (('M','Male'),('F','Female'),('K','Kids'))
-    company= models.ForeignKey(Company,on_delete=models.CASCADE)
-    product_id = models.CharField(max_length=10)
-    product_name= models.CharField(max_length=200)
-    article_number = models.CharField(max_length=10,null=True)
-    color = models.CharField(max_length=10,null=True)
-    product_category = models.CharField(max_length=2,choices=product_category_types,null=True)
+    
+    client= models.ForeignKey(Client,on_delete=models.CASCADE)
     product_type = models.CharField(max_length=20,null=True)
+    product_name= models.CharField(max_length=200)
+    article_number = models.CharField(max_length=10,null=True,unique=True)
+    color = models.CharField(max_length=10,null=True)
+    product_category = models.CharField(max_length=50,null=True)
+   
+    
     def __str__(self):
         return self.product_name
 
 
+
+
 class Transaction(models.Model):
-    transaction_types=(('S','Sales'),('P','Purchase'))
+    
+    client = models.ForeignKey(Client,on_delete=models.CASCADE)
     transaction_date = models.DateTimeField(default=timezone.now) 
-    company = models.ForeignKey(Company,on_delete=models.CASCADE)
-    product = models.ForeignKey(Product,on_delete=models.CASCADE)
     number_of_products = models.IntegerField(null=True)
-    transaction_type = models.CharField(max_length=2,choices=transaction_types,null=True)
+    total_number_of_products = models.IntegerField(null=True)
+    total_amount = models.FloatField(null=True)
+    transaction_type = models.CharField(max_length=20,null=True)
     
     def __str__(self):
-        company_1 = self.company_id
-        mymodel1 = Company.objects.get(id=company_1)
-        return mymodel1.company_name
+        client_1 = self.client_id
+        mymodel1 = Client.objects.get(id=client_1)
+        return mymodel1.client_name
+
+
+
+class TransactionProductDetail(models.Model):
+    transaction= models.ForeignKey(Transaction,on_delete=models.CASCADE)
+    product = models.ForeignKey(Product,on_delete=models.CASCADE)
+    number_of_products = models.IntegerField(null=True)
+    number_of_sizes = models.IntegerField(null=True)
+    transaction_type = models.CharField(max_length=20,null=True)
+    need_vat = models.BooleanField(null=True)
+    with_vat = models.BooleanField(null=True)
+    product_price = models.FloatField(null=True)
+
+    
+    def __str__(self):
+        return self.transaction_type
+
+
+class TransactionProductSizeDetail(models.Model):
+    transaction= models.ForeignKey(Transaction,on_delete=models.CASCADE)
+    product = models.ForeignKey(Product,on_delete=models.CASCADE)
+    size = models.CharField(max_length=10,null=True)
+    number_of_product = models.IntegerField(null=True)
+    def __str__(self):
+        return self.size
+
+
+
+
+
 
 

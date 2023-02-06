@@ -1,59 +1,55 @@
 
-from main.models import Company,Product,Transaction
+from main.models import Client, Product,Transaction,TransactionProductDetail,TransactionProductSizeDetail
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .serializers import CompanySerializer,ProductSerializer,TransactionSerializer
+from .serializers import ClientSerializer , ProductSerializer,TransactionSerializer,TransactionProductDetailSerializer,TransactionProductSizeDetailSerializer
 
 @api_view(['POST'])
-def create_company(request):
+def create_client(request):
     data = request.data
-    company = Company.objects.create(
-        company_id=data['company_id'],
-        company_name = data['company_name'],
-        company_type = data['company_type'],
-        district = data['district'],
+    client = Client.objects.create(
+        client_name = data['client_name'],
+        client_type = data['client_type'],
+        pan_number = data['pan_number'], 
         province = data['province'],
-        municipality_type = data['municipality_type'],
+        district = data['district'],
+        address = data['address'],
         municipality = data['municipality'],
         ward_no = data['ward_no'],
-        pan_number = data['pan_number'],
-        shop_keeper_name = data['shop_keeper_name'],
-        shop_keeper_phone = data['shop_keeper_phone'],
         manager_name = data['manager_name'],
         manager_phone = data['manager_phone'],
-        company_phone = data['company_phone'],
+        client_phone = data['client_phone'],
+        email = data['email']
     )
-    serializer = CompanySerializer(company,many=False)
+    serializer = ClientSerializer(client,many=False)
     return  Response(serializer.data)
 
 
 @api_view(['GET'])
-def get_company_all(request):
-    companies= Company.objects.all()
-    serializer = CompanySerializer(companies,many=True)
+def get_client_all(request):
+    clients= Client.objects.all()
+    serializer = ClientSerializer(clients,many=True)
     return  Response(serializer.data)
 
 
 @api_view(['GET'])
-def get_company(request,id):
-    company =Company.objects.get(id=id)
-    serializer =CompanySerializer(company,many=False)
+def get_client(request,id):
+    client =Client.objects.get(id=id)
+    serializer =ClientSerializer(client,many=False)
     return  Response(serializer.data)
-
 
 
 @api_view(['POST'])
 def create_product(request):
     data = request.data
     product = Product.objects.create(
-        company= Company.objects.get(id=data['company']),
-        product_id = data['product_id'],
+        client= Client.objects.get(client_name = data['client_name']),
         product_name= data['product_name'],
         article_number = data['article_number'],
         color = data['color'],
         product_category = data['product_category'],
-        product_type =data['product_type']
-    
+        product_type =data['product_type'],
+       
     )
     serializer = ProductSerializer(product,many=False)
     return  Response(serializer.data)
@@ -80,11 +76,12 @@ def get_product(request,id):
 def create_transaction(request):
     data = request.data
     transaction = Transaction.objects.create(
-        company= Company.objects.get(id=data['company']),
+        client= Client.objects.get(id=data['client']),
         product =Product.objects.get(id =data['product']),
         transaction_date = data['transaction_date'],
         number_of_products = data['number_of_products'],
-        transaction_type = data['transaction_type']
+        total_number_of_products  = data['total_number_of_products'],
+        total_amount=data['total_amount']
     
     )
     serializer = TransactionSerializer(transaction,many=False)
@@ -103,3 +100,7 @@ def get_transaction(request,id):
     transaction= Transaction.objects.get(id = id)
     serializer =TransactionSerializer(transaction,many=False)
     return  Response(serializer.data)
+
+
+
+

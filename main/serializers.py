@@ -1,10 +1,12 @@
 from rest_framework.serializers import ModelSerializer
-from .models import Company,Product,Transaction
+from .models import Client ,Product,Transaction,TransactionProductDetail,TransactionProductSizeDetail
 
-class CompanySerializer(ModelSerializer):
+class ClientSerializer(ModelSerializer):
     class Meta:
-        model = Company
+        model = Client
         fields = '__all__'
+
+
 
 class ProductSerializer(ModelSerializer):
     class Meta:
@@ -14,4 +16,17 @@ class ProductSerializer(ModelSerializer):
 class TransactionSerializer(ModelSerializer):
     class Meta:
         model = Transaction
+        fields = '__all__'
+
+
+class TransactionProductDetailSerializer(ModelSerializer):
+    class Meta:
+        model = TransactionProductDetail
+        fields = '__all__'
+
+
+
+class TransactionProductSizeDetailSerializer(ModelSerializer):
+    class Meta:
+        model = TransactionProductSizeDetail
         fields = '__all__'
