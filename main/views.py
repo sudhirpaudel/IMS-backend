@@ -1,8 +1,8 @@
 
-from main.models import Client, Product,Transaction,TransactionProductDetail,TransactionProductSizeDetail
+from main.models import Client, Product,Transaction,TotalSizeCount
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .serializers import ClientSerializer , ProductSerializer,TransactionSerializer,TransactionProductDetailSerializer,TransactionProductSizeDetailSerializer
+from .serializers import ClientSerializer , ProductSerializer,TransactionSerializer,TotalSizeCountSerializer
 
 @api_view(['POST'])
 def create_client(request):

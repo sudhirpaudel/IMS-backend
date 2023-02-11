@@ -45,7 +45,8 @@ class Transaction(models.Model):
     total_number_of_products = models.IntegerField(null=True)
     total_amount = models.FloatField(null=True)
     transaction_type = models.CharField(max_length=20,null=True)
-    
+    need_vat = models.BooleanField(null=True)
+    with_vat = models.BooleanField(null=True)
     def __str__(self):
         client_1 = self.client_id
         mymodel1 = Client.objects.get(id=client_1)
@@ -58,7 +59,6 @@ class TransactionProductDetail(models.Model):
     product = models.ForeignKey(Product,on_delete=models.CASCADE)
     number_of_products = models.IntegerField(null=True)
     number_of_sizes = models.IntegerField(null=True)
-    transaction_type = models.CharField(max_length=20,null=True)
     need_vat = models.BooleanField(null=True)
     with_vat = models.BooleanField(null=True)
     product_price = models.FloatField(null=True)
@@ -72,13 +72,25 @@ class TransactionProductSizeDetail(models.Model):
     transaction= models.ForeignKey(Transaction,on_delete=models.CASCADE)
     product = models.ForeignKey(Product,on_delete=models.CASCADE)
     size = models.CharField(max_length=10,null=True)
-    number_of_product = models.IntegerField(null=True)
+    number_of_products = models.IntegerField(null=True)
     def __str__(self):
         return self.size
 
 
 
 
+class TotalSizeCount(models.Model):
+    product = models.ForeignKey(Product,on_delete=models.CASCADE)
+    size = models.CharField(max_length=20,null=True)
+    number_of_products = models.IntegerField(null=True)
+    def __str__(self):
+        return self.size
 
 
 
+
+class TotalProductCount(models.Model):
+    product = models.ForeignKey(Product,on_delete=models.CASCADE)
+    number_of_products = models.IntegerField(null=True)
+    def __str__(self):
+        return self.product

@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer
-from .models import Client ,Product,Transaction,TransactionProductDetail,TransactionProductSizeDetail
+from .models import Client ,Product,Transaction,TransactionProductDetail,TransactionProductSizeDetail,TotalSizeCount,TotalProductCount
 
 class ClientSerializer(ModelSerializer):
     class Meta:
@@ -29,4 +29,30 @@ class TransactionProductDetailSerializer(ModelSerializer):
 class TransactionProductSizeDetailSerializer(ModelSerializer):
     class Meta:
         model = TransactionProductSizeDetail
+        fields = '__all__'
+
+class ClientImpSerializer(ModelSerializer):
+    class Meta:
+        model = Client
+        fields= ['id','client_name','pan_number']
+
+class TransactionClientSerializer(ModelSerializer):
+    client = ClientImpSerializer(many=False)
+
+    class Meta:
+        model = Transaction
+        fields = [ "id","transaction_date","number_of_products","total_number_of_products","total_amount","transaction_type","client"]
+
+
+
+
+class TotalSizeCountSerializer(ModelSerializer):
+    class Meta:
+        model = TotalSizeCount
+        fields = '__all__'
+
+
+class TotalProductCountSerializer(ModelSerializer):
+    class Meta:
+        model = TotalProductCount
         fields = '__all__'

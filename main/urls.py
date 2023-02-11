@@ -20,6 +20,9 @@ urlpatterns=[
 
 
 
-    path('transaction/alldetails',deals_with_transaction.deal_with_transaction,name='All Transaction Detail Main')
+    path('transaction',deals_with_transaction.deal_with_transaction,name='All Transaction Detail Main'),
+    path('transactions',deals_with_transaction.get_all_transactions,name='All Transaction Detail Show'),
 
+    path('inventory/',deals_with_transaction.show_inventory,name='All Size Detail'),
+    path('transaction/alldetails/<int:id>',deals_with_transaction.get_all_transactions_details,name='All details of transaction')
 ]
